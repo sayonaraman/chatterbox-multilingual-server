@@ -1,6 +1,6 @@
 FROM nvidia/cuda:12.8.1-runtime-ubuntu22.04
 
-ARG RUNTIME=nvidia
+# NVIDIA GPU ONLY - No CPU support
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -8,6 +8,11 @@ ENV PYTHONUNBUFFERED=1
 ENV DEBIAN_FRONTEND=noninteractive
 # Set the Hugging Face home directory for better model caching
 ENV HF_HOME=/app/hf_cache
+# GPU optimization environment variables
+ENV CUDA_VISIBLE_DEVICES=0
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;8.9;9.0"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -28,18 +33,12 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 # Set up working directory
 WORKDIR /app
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
-
-# Upgrade pip and install Python dependencies
-RUN pip3 install --no-cache-dir --upgrade pip && \
-    pip3 install --no-cache-dir -r requirements.txt
-# Conditionally install NVIDIA dependencies if RUNTIME is set to 'nvidia'
+# Copy NVIDIA requirements ONLY (no CPU support)
 COPY requirements-nvidia.txt .
 
-RUN if [ "$RUNTIME" = "nvidia" ]; then \
-    pip3 install --no-cache-dir -r requirements-nvidia.txt; \
-    fi
+# Upgrade pip and install NVIDIA GPU dependencies
+RUN pip3 install --no-cache-dir --upgrade pip && \
+    pip3 install --no-cache-dir -r requirements-nvidia.txt
 # Copy the rest of the application code
 COPY . .
 

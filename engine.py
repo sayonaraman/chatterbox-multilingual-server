@@ -103,63 +103,15 @@ def load_model() -> bool:
         return True
 
     try:
-        # Determine processing device with robust CUDA detection and intelligent fallback
-        device_setting = config_manager.get_string("tts_engine.device", "auto")
-
-        if device_setting == "auto":
-            if _test_cuda_functionality():
-                resolved_device_str = "cuda"
-                logger.info("CUDA functionality test passed. Using CUDA.")
-            elif _test_mps_functionality():
-                resolved_device_str = "mps"
-                logger.info("MPS functionality test passed. Using MPS.")
-            else:
-                resolved_device_str = "cpu"
-                logger.info("CUDA and MPS not functional or not available. Using CPU.")
-
-        elif device_setting == "cuda":
-            if _test_cuda_functionality():
-                resolved_device_str = "cuda"
-                logger.info("CUDA requested and functional. Using CUDA.")
-            else:
-                resolved_device_str = "cpu"
-                logger.warning(
-                    "CUDA was requested in config but functionality test failed. "
-                    "PyTorch may not be compiled with CUDA support. "
-                    "Automatically falling back to CPU."
-                )
-
-        elif device_setting == "mps":
-            if _test_mps_functionality():
-                resolved_device_str = "mps"
-                logger.info("MPS requested and functional. Using MPS.")
-            else:
-                resolved_device_str = "cpu"
-                logger.warning(
-                    "MPS was requested in config but functionality test failed. "
-                    "PyTorch may not be compiled with MPS support. "
-                    "Automatically falling back to CPU."
-                )
-
-        elif device_setting == "cpu":
-            resolved_device_str = "cpu"
-            logger.info("CPU device explicitly requested in config. Using CPU.")
-
-        else:
-            logger.warning(
-                f"Invalid device setting '{device_setting}' in config. "
-                f"Defaulting to auto-detection."
-            )
-            if _test_cuda_functionality():
-                resolved_device_str = "cuda"
-            elif _test_mps_functionality():
-                resolved_device_str = "mps"
-            else:
-                resolved_device_str = "cpu"
-            logger.info(f"Auto-detection resolved to: {resolved_device_str}")
-
+        # NVIDIA GPU ONLY - No CPU/MPS fallback
+        if not _test_cuda_functionality():
+            logger.error("❌ CUDA NOT AVAILABLE! This container requires NVIDIA GPU.")
+            logger.error("Make sure you're running with --gpus all flag")
+            raise RuntimeError("NVIDIA GPU required but not available")
+        
+        resolved_device_str = "cuda"
         model_device = resolved_device_str
-        logger.info(f"Final device selection: {model_device}")
+        logger.info(f"🚀 GPU CONFIRMED: Using CUDA device")
 
         # Get configured model_repo_id for logging and context,
         # though from_pretrained might use its own internal default if not overridden.

@@ -13,6 +13,7 @@ import uuid
 import yaml  # For loading presets
 import numpy as np
 import librosa  # For potential direct use if needed, though utils.py handles most
+import torch  # For GPU checking
 from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import Optional, List, Dict, Any, Literal
@@ -982,6 +983,17 @@ async def openai_speech_endpoint(request: OpenAISpeechRequest):
 
 # --- Main Execution ---
 if __name__ == "__main__":
+    # GPU Status Check
+    if torch.cuda.is_available():
+        gpu_count = torch.cuda.device_count()
+        current_device = torch.cuda.current_device()
+        gpu_name = torch.cuda.get_device_name(current_device)
+        logger.info(f"🚀 GPU AVAILABLE: {gpu_name} (Device {current_device}/{gpu_count-1})")
+        logger.info(f"🔥 CUDA Version: {torch.version.cuda}")
+        logger.info(f"⚡ PyTorch Version: {torch.__version__}")
+    else:
+        logger.warning("❌ NO GPU DETECTED - Running on CPU (will be slow!)")
+    
     server_host = get_host()
     server_port = get_port()
 
