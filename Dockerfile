@@ -39,8 +39,10 @@ COPY requirements-nvidia.txt .
 # Upgrade pip first
 RUN pip3 install --no-cache-dir --upgrade pip
 
-# Install PyTorch with CUDA support first (most critical)
-RUN pip3 install --no-cache-dir torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --extra-index-url https://download.pytorch.org/whl/cu121
+# Install PyTorch with CUDA support first (EXACT versions from original chatterbox)
+# Try cu124 if cu121 doesn't have torch 2.6.0
+RUN pip3 install --no-cache-dir torch==2.6.0 torchaudio==2.6.0 --extra-index-url https://download.pytorch.org/whl/cu124 || \
+    pip3 install --no-cache-dir torch==2.6.0 torchaudio==2.6.0 --extra-index-url https://download.pytorch.org/whl/cu121
 
 # Install other dependencies
 RUN pip3 install --no-cache-dir -r requirements-nvidia.txt

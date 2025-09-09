@@ -11,19 +11,19 @@
 fastapi
 uvicorn[standard]
 
-# Other ML & Audio Libraries (flexible versions for compatibility)
-numpy>=1.24.0,<2.0.0  # More flexible range
+# Other ML & Audio Libraries (EXACT versions from original chatterbox pyproject.toml)
+numpy>=1.24.0,<1.26.0  # Exact range from original
 soundfile  # Requires libsndfile system library
-librosa  # Let it choose compatible version
-safetensors  # Let it choose compatible version
+librosa==0.11.0  # Exact version from original
+safetensors==0.5.3  # Exact version from original
 descript-audio-codec
-transformers>=4.40.0  # Minimum required version
-diffusers>=0.26.0  # Minimum required version
+transformers==4.46.3  # Exact version from original
+diffusers==0.29.0  # Exact version from original
 s3tokenizer  # Required for original chatterbox
-resemble-perth  # Let it choose compatible version
-conformer  # Let it choose compatible version
-pkuseg  # Let it choose compatible version
-pykakasi  # Let it choose compatible version
+resemble-perth==1.0.1  # Exact version from original
+conformer==0.3.2  # Exact version from original
+pkuseg==0.0.25  # Exact version from original
+pykakasi==2.3.0  # Exact version from original
 
 # Configuration & Utilities
 PyYAML
