@@ -290,14 +290,14 @@ def synthesize(
 
         # Call the appropriate model's generate method
         if use_multilingual:
-            # Multilingual model may have different parameters
+            # Multilingual model has different parameters (language_id instead of language)
             wav_tensor = selected_model.generate(
                 text=text,
+                language_id=language,  # Multilingual model uses language_id
                 audio_prompt_path=audio_prompt_path,
                 temperature=temperature,
                 exaggeration=exaggeration,
                 cfg_weight=cfg_weight,
-                language=language,  # Pass language to multilingual model
             )
         else:
             # English model (original parameters)
