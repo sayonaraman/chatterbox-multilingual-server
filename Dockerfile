@@ -36,9 +36,14 @@ WORKDIR /app
 # Copy NVIDIA requirements ONLY (no CPU support)
 COPY requirements-nvidia.txt .
 
-# Upgrade pip and install NVIDIA GPU dependencies
-RUN pip3 install --no-cache-dir --upgrade pip && \
-    pip3 install --no-cache-dir -r requirements-nvidia.txt
+# Upgrade pip first
+RUN pip3 install --no-cache-dir --upgrade pip
+
+# Install PyTorch with CUDA support first (most critical)
+RUN pip3 install --no-cache-dir torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --extra-index-url https://download.pytorch.org/whl/cu121
+
+# Install other dependencies
+RUN pip3 install --no-cache-dir -r requirements-nvidia.txt
 # Copy the rest of the application code
 COPY . .
 

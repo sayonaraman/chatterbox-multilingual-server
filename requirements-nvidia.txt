@@ -1,37 +1,29 @@
 # requirements-nvidia.txt (For NVIDIA GPU Installation with CUDA 12.1)
 # This file ensures a compatible set of CUDA-enabled torch packages are installed.
 
-# Use the official PyTorch package index for CUDA 12.8 (matching Dockerfile)
---extra-index-url https://download.pytorch.org/whl/cu128
+# PyTorch is installed separately in Dockerfile for better control
+# --extra-index-url https://download.pytorch.org/whl/cu121
+# torch==2.5.1
+# torchvision==0.20.1  
+# torchaudio==2.5.1
 
-# Pinning a compatible set of torch-related libraries to match original chatterbox
-# Updated to use PyTorch 2.6.0 for compatibility with original ResembleAI chatterbox
-torch==2.6.0
-torchvision==0.21.0  # Compatible with torch 2.6.0
-torchaudio==2.6.0
-
-# --- Core Application Dependencies ---
-
-# Install chatterbox from ORIGINAL ResembleAI repository with multilingual support
-git+https://github.com/resemble-ai/chatterbox.git
-
-# Core Web Framework
+# --- Core Web Framework (install first) ---
 fastapi
 uvicorn[standard]
 
-# Other ML & Audio Libraries (matching original chatterbox requirements)
-numpy>=1.24.0,<1.26.0  # Exact version from original chatterbox
+# Other ML & Audio Libraries (flexible versions for compatibility)
+numpy>=1.24.0,<2.0.0  # More flexible range
 soundfile  # Requires libsndfile system library
-librosa==0.11.0  # Exact version from original chatterbox
-safetensors==0.5.3  # Exact version from original chatterbox
+librosa  # Let it choose compatible version
+safetensors  # Let it choose compatible version
 descript-audio-codec
-transformers==4.46.3  # Required for original chatterbox
-diffusers==0.29.0  # Required for original chatterbox
+transformers>=4.40.0  # Minimum required version
+diffusers>=0.26.0  # Minimum required version
 s3tokenizer  # Required for original chatterbox
-resemble-perth==1.0.1  # Required for original chatterbox
-conformer==0.3.2  # Required for original chatterbox
-pkuseg==0.0.25  # Required for original chatterbox
-pykakasi==2.3.0  # Required for original chatterbox
+resemble-perth  # Let it choose compatible version
+conformer  # Let it choose compatible version
+pkuseg  # Let it choose compatible version
+pykakasi  # Let it choose compatible version
 
 # Configuration & Utilities
 PyYAML
@@ -49,3 +41,7 @@ hf_transfer                     # Speed up file transfers
 pydub
 audiotsm
 praat-parselmouth
+
+# --- Install chatterbox LAST (after all dependencies) ---
+# Install chatterbox from ORIGINAL ResembleAI repository with multilingual support
+git+https://github.com/resemble-ai/chatterbox.git
