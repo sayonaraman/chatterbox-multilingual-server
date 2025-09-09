@@ -46,8 +46,41 @@ ui_state:
   hide_generation_warning: false
   theme: light
 ui:
-  title: Chatterbox TTS Server
+  title: Chatterbox TTS Server (Multilingual)
   show_language_select: true
   max_predefined_voices_in_dropdown: 50
+  supported_languages:
+    - code: "en"
+      name: "English"
+    - code: "es"
+      name: "Spanish"
+    - code: "fr"
+      name: "French"
+    - code: "de"
+      name: "German"
+    - code: "it"
+      name: "Italian"
+    - code: "pt"
+      name: "Portuguese"
+    - code: "pl"
+      name: "Polish"
+    - code: "tr"
+      name: "Turkish"
+    - code: "ru"
+      name: "Russian"
+    - code: "nl"
+      name: "Dutch"
+    - code: "cs"
+      name: "Czech"
+    - code: "ar"
+      name: "Arabic"
+    - code: "zh"
+      name: "Chinese"
+    - code: "ja"
+      name: "Japanese"
+    - code: "hu"
+      name: "Hungarian"
+    - code: "ko"
+      name: "Korean"
 debug:
   save_intermediate_audio: false
